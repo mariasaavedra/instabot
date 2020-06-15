@@ -36,8 +36,10 @@ const login = (async () => {
   await page.type("#pass", config.password, { delay: 30 })
   await page.click("#loginbutton");
   await page.waitForNavigation({ waitUntil: "networkidle0" });
+  console.log("logging in... one moment");
   await page.waitFor(15000);
   await page.waitFor('circle');
+  await writeCookies();
 });
 
 const writeCookies = (async () => {
@@ -75,7 +77,6 @@ const getMessages = (async () => {
       return m.textContent;
     });
   });
-
   console.log(msg);
 });
 
@@ -91,8 +92,6 @@ const getMessages = (async () => {
       console.log("failed to login");
       process.exit(0);
     }
-    // write to cookies.json on login success.
-    await writeCookies();
   } else {
       // we're already logged in
       await page.setCookie(...cookies);
