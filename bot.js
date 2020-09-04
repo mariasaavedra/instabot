@@ -45,14 +45,15 @@ const wait = (async (ms) => {
 const setup = (async () => {
   browser = await puppeteer.launch({ headless: true });
   page =  await browser.newPage();
-  context = browser.defaultBrowserContext();
+  context = await browser.createIncognitoBrowserContext();
   context.overridePermissions(hostname, []);
   await page.setDefaultNavigationTimeout(100000);
   await page.setViewport({ width: 1200, height: 800 });
 });
 
 const login = (async () => {
-  await page.goto(hostname, { waitUntil: "networkidle2" });
+  await page.goto(hostname + "/login", { waitUntil: "networkidle2" });
+  await wait(3000);
   await page.type("input[name='username']", config.username, { delay: 30 })
   await page.type("input[name='password']", config.password, { delay: 30 })
   await page.click("button[type='submit']");
